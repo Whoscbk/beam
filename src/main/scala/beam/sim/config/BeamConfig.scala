@@ -2722,6 +2722,7 @@ object BeamConfig {
     case class Physsim(
       bprsim: BeamConfig.Beam.Physsim.Bprsim,
       cchRoutingAssignment: BeamConfig.Beam.Physsim.CchRoutingAssignment,
+      duplicatePTE: BeamConfig.Beam.Physsim.DuplicatePTE,
       events: BeamConfig.Beam.Physsim.Events,
       eventsForFullVersionOfVia: scala.Boolean,
       eventsSampling: scala.Double,
@@ -2779,6 +2780,26 @@ object BeamConfig {
         def apply(c: com.typesafe.config.Config): BeamConfig.Beam.Physsim.CchRoutingAssignment = {
           BeamConfig.Beam.Physsim.CchRoutingAssignment(
             congestionFactor = if (c.hasPathOrNull("congestionFactor")) c.getDouble("congestionFactor") else 1.0
+          )
+        }
+      }
+
+      case class DuplicatePTE(
+        departureTimeShiftMax: scala.Int,
+        departureTimeShiftMin: scala.Int,
+        fractionOfEventsToDuplicate: scala.Double
+      )
+
+      object DuplicatePTE {
+
+        def apply(c: com.typesafe.config.Config): BeamConfig.Beam.Physsim.DuplicatePTE = {
+          BeamConfig.Beam.Physsim.DuplicatePTE(
+            departureTimeShiftMax =
+              if (c.hasPathOrNull("departureTimeShiftMax")) c.getInt("departureTimeShiftMax") else 0,
+            departureTimeShiftMin =
+              if (c.hasPathOrNull("departureTimeShiftMin")) c.getInt("departureTimeShiftMin") else 0,
+            fractionOfEventsToDuplicate =
+              if (c.hasPathOrNull("fractionOfEventsToDuplicate")) c.getDouble("fractionOfEventsToDuplicate") else 0.0
           )
         }
       }
@@ -3444,6 +3465,10 @@ object BeamConfig {
             if (c.hasPathOrNull("cchRoutingAssignment")) c.getConfig("cchRoutingAssignment")
             else com.typesafe.config.ConfigFactory.parseString("cchRoutingAssignment{}")
           ),
+          duplicatePTE = BeamConfig.Beam.Physsim.DuplicatePTE(
+            if (c.hasPathOrNull("duplicatePTE")) c.getConfig("duplicatePTE")
+            else com.typesafe.config.ConfigFactory.parseString("duplicatePTE{}")
+          ),
           events = BeamConfig.Beam.Physsim.Events(
             if (c.hasPathOrNull("events")) c.getConfig("events")
             else com.typesafe.config.ConfigFactory.parseString("events{}")
@@ -3986,9 +4011,8 @@ object BeamConfig {
 
         case class ModesToBuild(
           drive: scala.Boolean,
-          drive_transit: scala.Boolean,
-          walk: scala.Boolean,
-          walk_transit: scala.Boolean
+          transit: scala.Boolean,
+          walk: scala.Boolean
         )
 
         object ModesToBuild {
@@ -3996,9 +4020,8 @@ object BeamConfig {
           def apply(c: com.typesafe.config.Config): BeamConfig.Beam.Urbansim.BackgroundODSkimsCreator.ModesToBuild = {
             BeamConfig.Beam.Urbansim.BackgroundODSkimsCreator.ModesToBuild(
               drive = !c.hasPathOrNull("drive") || c.getBoolean("drive"),
-              drive_transit = !c.hasPathOrNull("drive_transit") || c.getBoolean("drive_transit"),
-              walk = !c.hasPathOrNull("walk") || c.getBoolean("walk"),
-              walk_transit = !c.hasPathOrNull("walk_transit") || c.getBoolean("walk_transit")
+              transit = !c.hasPathOrNull("transit") || c.getBoolean("transit"),
+              walk = !c.hasPathOrNull("walk") || c.getBoolean("walk")
             )
           }
         }
