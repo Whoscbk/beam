@@ -79,6 +79,7 @@ class BeamScenarioLoader(
     val households: Households = replaceHouseholds(scenario.getHouseholds, newHouseholds)
 
     beamScenario.privateVehicles.clear()
+    // HERE
     vehicles
       .map(c => buildBeamVehicle(beamScenario.vehicleTypes, c, rand.nextInt))
       .foreach(v => beamScenario.privateVehicles.put(v.id, v))

@@ -304,6 +304,7 @@ trait BeamHelper extends LazyLogging {
       IndexedSeq.empty[FreightCarrier]
     }
 
+    // HERE
     BeamScenario(
       readFuelTypeFile(beamConfig.beam.agentsim.agents.vehicles.fuelTypesFilePath).toMap,
       vehicleTypes,
@@ -539,13 +540,15 @@ trait BeamHelper extends LazyLogging {
       plansMerged: Boolean
     ) = prepareBeamService(config, abstractModule)
 
-    runBeam(
-      services,
-      scenario,
-      beamScenario,
-      beamExecutionConfig.outputDirectory,
-      plansMerged
-    )
+    if (!beamScenario.beamConfig.beam.agentsim.runAdoptionOnly) {
+      runBeam(
+        services,
+        scenario,
+        beamScenario,
+        beamExecutionConfig.outputDirectory,
+        plansMerged
+      )
+    }
     (scenario.getConfig, beamExecutionConfig.outputDirectory, services)
   }
 

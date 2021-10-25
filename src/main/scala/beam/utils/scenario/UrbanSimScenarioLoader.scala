@@ -179,6 +179,7 @@ class UrbanSimScenarioLoader(
       .find(_.vehicleCategory == VehicleCategory.Bike)
       .getOrElse(throw new RuntimeException("Bike not found in vehicle types."))
 
+    // HERE
     assignVehicles(households, householdIdToPersons, personId2Score).foreach { case (householdInfo, nVehicles) =>
       val id = Id.create(householdInfo.householdId.id, classOf[Household])
       val household = new HouseholdsFactoryImpl().createHousehold(id)
